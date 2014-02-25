@@ -48,7 +48,15 @@ sub _is_class_loaded {
     }
 
     # check for any method
-    return 1 if $stash->list_all_symbols('CODE');
+    foreach my $sub ($stash->list_all_symbols('CODE')) {
+
+	# perl may fail to compile a file and leave
+	# an empty BEGIN block in the stash, but the module is not loaded
+        no strict 'refs';
+        next if $sub eq 'BEGIN' && !defined &{"${class}::BEGIN"};
+
+        return 1;
+    }
 
     # fail
     return 0;

@@ -96,6 +96,16 @@ do {
 };
 ok(is_class_loaded('Class::Load::WithPrototypedStub'), "defining a stub with a prototype means the class is loaded");
 # }}}
+# sub with BEGIN undef (no) {{{
+do {
+    package Class::Load::WithUndefinedBegin;
+    BEGIN {};
+    undef &BEGIN;
+};
+ok(!Class::Load::PP::is_class_loaded('Class::Load::WithUndefinedBegin'), "a package with an empty BEGIN block is not loaded");
+# }}}
+
+
 
 ok(!is_class_loaded('Class::Load::VersionCheck'), 'Class::Load::VersionCheck has not been loaded yet');
 require Class::Load::VersionCheck;
